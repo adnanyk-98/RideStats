@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "backend: run",
+			"type": "shell",
+			"command": "mvn",
+			"args": [
+				"-f",
+				"backend/pom.xml",
+				"spring-boot:run"
+			],
+			"isBackground": true,
+			"group": "build"
+		}
+	]
+}
