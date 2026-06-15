@@ -7,7 +7,7 @@ package com.ridestats.backend.dto;
  * @param generatedSummary human-readable generated summary text
  */
 public record SummaryResponse(
-        SummaryStats stats,
+        SummaryStatsResponse stats,
         String generatedSummary
 ) {
 }

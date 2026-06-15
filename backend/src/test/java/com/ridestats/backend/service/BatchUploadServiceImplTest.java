@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,8 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
 import com.ridestats.backend.dto.RideSummary;
+import com.ridestats.backend.dto.SummaryPeriod;
 import com.ridestats.backend.dto.SummaryResponse;
-import com.ridestats.backend.dto.SummaryStats;
+import com.ridestats.backend.dto.SummaryStatsResponse;
 
 @ExtendWith(MockitoExtension.class)
 class BatchUploadServiceImplTest {
@@ -34,7 +38,8 @@ class BatchUploadServiceImplTest {
 
         when(gpxParserService.parse(firstFile)).thenReturn(new RideSummary(19.44, 58.5, 3526, 19.85, null, null));
         when(gpxParserService.parse(secondFile)).thenReturn(new RideSummary(40.56, 121.5, 7200, 20.28, null, null));
-        when(summaryGeneratorService.generate(org.mockito.ArgumentMatchers.any(SummaryStats.class))).thenReturn("generated summary");
+        when(summaryGeneratorService.generate(any(SummaryStatsResponse.class), eq(SummaryPeriod.FOUR_WEEKS)))
+                .thenReturn("generated summary");
 
         SummaryResponse response = batchUploadService.generateSummary(new MockMultipartFile[]{firstFile, secondFile});
 

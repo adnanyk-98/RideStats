@@ -5,8 +5,9 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ridestats.backend.dto.RideSummary;
+import com.ridestats.backend.dto.SummaryPeriod;
 import com.ridestats.backend.dto.SummaryResponse;
-import com.ridestats.backend.dto.SummaryStats;
+import com.ridestats.backend.dto.SummaryStatsResponse;
 
 /**
  * Default batch upload implementation.
@@ -37,13 +38,13 @@ public class BatchUploadServiceImpl implements BatchUploadService {
             rideSummaries[index] = gpxParserService.parse(files[index]);
         }
 
-        SummaryStats summaryStats = toSummaryStats(rideSummaries);
-        String generatedSummary = summaryGeneratorService.generate(summaryStats);
+        SummaryStatsResponse summaryStats = toSummaryStats(rideSummaries);
+        String generatedSummary = summaryGeneratorService.generate(summaryStats, SummaryPeriod.FOUR_WEEKS);
 
         return new SummaryResponse(summaryStats, generatedSummary);
     }
 
-    private static SummaryStats toSummaryStats(RideSummary[] rideSummaries) {
+    private static SummaryStatsResponse toSummaryStats(RideSummary[] rideSummaries) {
         int completedRides = rideSummaries.length;
         double totalDistanceKm = 0;
         double longestRideKm = 0;
@@ -62,7 +63,7 @@ public class BatchUploadServiceImpl implements BatchUploadService {
             averageSpeedKph = totalDistanceKm / (totalTimeSeconds / 3600.0);
         }
 
-        return new SummaryStats(
+        return new SummaryStatsResponse(
                 completedRides,
                 round(totalDistanceKm),
                 round(longestRideKm),
