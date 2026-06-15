@@ -65,7 +65,7 @@ class RideServiceImplTest {
     @Test
     void getLatestRideReturnsMostRecentRide() {
         Ride storedRide = ride(3L, "latest.gpx", new BigDecimal("55.00"), new BigDecimal("250.00"), 8400L, new BigDecimal("23.57"), LocalDateTime.of(2026, 6, 15, 20, 15));
-        when(rideRepository.findFirstByOrderByUploadedAtDesc()).thenReturn(Optional.of(storedRide));
+        when(rideRepository.findTopByOrderByRideDateDesc()).thenReturn(Optional.of(storedRide));
 
         RideResponse response = rideService.getLatestRide();
 

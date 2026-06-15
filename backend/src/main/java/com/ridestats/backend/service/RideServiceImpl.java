@@ -1,7 +1,6 @@
 package com.ridestats.backend.service;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -36,7 +35,6 @@ public class RideServiceImpl implements RideService {
     public RideResponse getRideById(Long rideId) {
         Ride ride = rideRepository.findById(rideId)
                 .orElseThrow(() -> new RideNotFoundException(rideId));
-
         return toRideResponse(ride);
     }
 
