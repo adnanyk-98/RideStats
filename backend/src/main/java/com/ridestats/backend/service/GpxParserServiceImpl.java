@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -44,6 +45,17 @@ public class GpxParserServiceImpl implements GpxParserService {
         Instant endTime = null;
 
         WayPoint previous = null;
+
+        Instant rideDate = null;
+
+        if (gpx.getMetadata().isPresent()
+                && gpx.getMetadata().get().getTime().isPresent()) {
+
+            rideDate = gpx.getMetadata()
+                    .get()
+                    .getTime()
+                    .get();
+        }
 
         for (Track track : gpx.getTracks()) {
 
@@ -110,11 +122,14 @@ public class GpxParserServiceImpl implements GpxParserService {
 
         Ride ride = Ride.builder()
                 .fileName(file.getOriginalFilename())
-            .distanceKm(BigDecimal.valueOf(rideSummary.distanceKm()))
-            .elevationGainM(BigDecimal.valueOf(rideSummary.elevationGainM()))
+                .distanceKm(BigDecimal.valueOf(rideSummary.distanceKm()))
+                .elevationGainM(BigDecimal.valueOf(rideSummary.elevationGainM()))
                 .movingTimeSeconds(rideSummary.movingTimeSeconds())
-            .averageSpeedKph(BigDecimal.valueOf(rideSummary.averageSpeedKph()))
+                .averageSpeedKph(BigDecimal.valueOf(rideSummary.averageSpeedKph()))
                 .uploadedAt(LocalDateTime.now())
+                .rideDate(LocalDateTime.ofInstant(
+                        rideDate != null ? rideDate : Instant.now(),
+                        ZoneId.systemDefault()))
                 .build();
         rideRepository.save(ride);
         return rideSummary;

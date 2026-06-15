@@ -45,4 +45,7 @@ public class Ride {
 
     @Column(name = "uploaded_at")
     private LocalDateTime uploadedAt;
+
+    @Column(name = "ride_date")
+    private LocalDateTime rideDate;
 }
